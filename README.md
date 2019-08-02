@@ -1,2 +1,2 @@
-# tipples
-Tools for Instant PiPeLinES
+# temples
+🏛️ Tools for Exploration and Modeling PipeLinES
