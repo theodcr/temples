@@ -6,3 +6,4 @@ format:
 
 test:
 	env TEMPLES_CONFIG=./tests/linreg/config python tests/linreg/run_linreg.py
+	rm -r tests/linreg/data/*

@@ -15,6 +15,7 @@ class RawCSVData(Data):
         return self._data
 
     def write(self) -> None:
+        super().write()
         self._data.to_csv(self.path)
 
 

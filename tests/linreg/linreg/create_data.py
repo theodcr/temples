@@ -3,7 +3,9 @@ import string
 import pandas as pd
 from sklearn.datasets import make_regression
 
-from temples import settings
+from temples import output, settings
+
+from .data import raw_features, raw_targets
 
 
 def create_regression(
@@ -13,3 +15,8 @@ def create_regression(
     features = pd.DataFrame(X, columns=list(string.ascii_lowercase[: X.shape[1]]))
     targets = pd.Series(y, name="target")
     return features, targets
+
+
+@output(raw_features, raw_targets)
+def main():
+    return create_regression()
