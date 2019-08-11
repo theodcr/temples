@@ -4,10 +4,16 @@ from typing import Any, Dict
 
 import toml
 
+_base_temples_path = Path(os.environ["TEMPLES_CONFIG"])
+
+
+def get_absolute_path(path: str) -> Path:
+    return _base_temples_path / path
+
 
 class Configuration(object):
     def __init__(self, name: str) -> None:
-        self._path = Path(os.environ["TEMPLE_CONFIG"]) / (name + ".toml")
+        self._path = get_absolute_path(name + ".toml")
         self._dict = self.load()
 
     def load(self) -> Dict:

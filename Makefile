@@ -5,4 +5,4 @@ format:
 	black tests/
 
 test:
-	env TEMPLE_CONFIG=./tests/linreg/config python tests/linreg/run_linreg.py
+	env TEMPLES_CONFIG=./tests/linreg/config python tests/linreg/run_linreg.py
