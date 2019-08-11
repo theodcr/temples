@@ -1,12 +1,11 @@
 import os
 
-from linreg.data import RawData
-from temples import env, settings
+from linreg.data import raw_features
+from linreg.create_data import create_regression
+
 
 if __name__ == "__main__":
     print(os.environ["TEMPLES_CONFIG"])
-    print(env())
-    print(settings())
-    raw_data = RawData()
-    print(raw_data.path)
-    print(raw_data.exists())
+    print(raw_features.path)
+    print(raw_features.exists())
+    create_regression()

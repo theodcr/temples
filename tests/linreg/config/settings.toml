@@ -1,1 +1,2 @@
-variable = "value"
+[make_regression]
+n_samples = 100
