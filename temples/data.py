@@ -1,6 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
-from functools import update_wrapper
+from functools import wraps
 from pathlib import Path
 from typing import Dict, List
 
@@ -85,11 +85,12 @@ def inputs(**dict_of_data: Dict[str, Data]):
     """
 
     def decorator(function):
-        def wrapper(*args, **kwargs):
+        @wraps(function)
+        def new_func(*args, **kwargs):
             inputs = {keyword: data.load() for keyword, data in dict_of_data.items()}
-            function(*args, **inputs, **kwargs)
+            return function(*args, **inputs, **kwargs)
 
-        return update_wrapper(wrapper, function)
+        return new_func
 
     return decorator
 
@@ -113,12 +114,14 @@ def outputs(*list_of_data: List[Data]):
     """
 
     def decorator(function):
+        @wraps(function)
         def wrapper(*args, **kwargs):
             outputs = function(*args, **kwargs)
             for data, output in zip(list_of_data, outputs):
                 data._data = output
                 data.write()
+            return outputs
 
-        return update_wrapper(wrapper, function)
+        return wrapper
 
     return decorator
