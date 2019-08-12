@@ -1,9 +1,7 @@
 import logging
 
 from linreg import create_data, model
-
 from temples import main_runner
-
 
 if __name__ == "__main__":
     logging.getLogger().setLevel(logging.INFO)
