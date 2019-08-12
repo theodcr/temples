@@ -1,14 +1,20 @@
 import logging
+from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import List
 
 from .config import get_absolute_path
 
 
-class Data(object):
+class Data(ABC):
     """
     Defines a Data object: a wrapper around a given data stored on disk.
-    Actual data is not loaded on instanciation.
+    Actual data is not loaded on instantiation.
+
+    This is an abstract base class, this class should be used to define Data classes
+    specific to the application.
+    Methods `load` and `write` must be overridden, it is also advised to override
+    the `__init__` method. See Usage section for an example.
 
     Parameters
     ----------
@@ -26,13 +32,12 @@ class Data(object):
 
     Usage
     -----
-    This class should be used to define classes specific to the application.
-    For example:
     >>> class RawCSVData(Data):
     >>>     def __init__(self):
     >>>         super().__init__(path="../examples.csv", relative_to_config=True)
     >>>
     >>>     def load(self):
+    >>>         super().load()
     >>>         self._data = pd.read_csv(self.path)
     >>>         return self._data
     >>>
@@ -48,12 +53,14 @@ class Data(object):
             self.path = Path(path)
         self._data = None
 
+    @abstractmethod
     def load(self) -> None:
-        raise NotImplementedError
+        logging.info(f"Loading {self.__class__.__name__} from {self.path.resolve()}")
 
+    @abstractmethod
     def write(self) -> None:
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        logging.info(f"Writing {self.__class__.__name__} at {self.path.absolute()}")
+        logging.info(f"Writing {self.__class__.__name__} at {self.path.resolve()}")
 
     def exists(self) -> bool:
         return self.path.exists()

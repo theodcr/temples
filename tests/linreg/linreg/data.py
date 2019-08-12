@@ -11,12 +11,13 @@ class RawCSVData(Data):
         super().__init__(path=env["raw_data"] + name + ".csv", relative_to_config=True)
 
     def load(self) -> pd.DataFrame:
+        super().load()
         self._data = pd.read_csv(self.path)
         return self._data
 
     def write(self) -> None:
         super().write()
-        self._data.to_csv(self.path)
+        self._data.to_csv(self.path, header=True)
 
 
 raw_features = RawCSVData("features")
