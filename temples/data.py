@@ -3,7 +3,7 @@ import pickle
 from abc import ABC, abstractmethod
 from functools import wraps
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Iterable
 
 from .config import get_absolute_path
 
@@ -123,6 +123,9 @@ def outputs(*list_of_data: Data) -> Callable:
         @wraps(function)
         def wrapper(*args: Any, **kwargs: Any) -> Any:
             outputs = function(*args, **kwargs)
+            # create tuple if function returns only 1 element and not a tuple
+            if not isinstance(outputs, Iterable):
+                outputs = (outputs,)
             for data, output in zip(list_of_data, outputs):
                 data._data = output
                 data.write()

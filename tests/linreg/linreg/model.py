@@ -16,7 +16,7 @@ def train_linear_regression(
     """Trains a ridge regression model on given data, returns the model."""
     model = Ridge(alpha)
     model.fit(features, targets)
-    return (model,)
+    return model
 
 
 if __name__ == "__main__":
