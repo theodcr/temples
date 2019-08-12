@@ -3,7 +3,7 @@ import pickle
 from abc import ABC, abstractmethod
 from functools import wraps
 from pathlib import Path
-from typing import Any, Callable, Iterable
+from typing import Any, Callable
 
 from .config import get_absolute_path
 
@@ -49,7 +49,7 @@ class Data(ABC):
         """
         pass
 
-    def load(self) -> True:
+    def load(self) -> Any:
         """Loads the data stored on disk at self.path to attribute self._data.
 
         Does not reload data from disk if data is already loaded in instance.
@@ -74,7 +74,7 @@ class Data(ABC):
         Creates directories if needed, erases existing data.
         """
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        logging.info(f"Writing {self.__class__.__name__} at {self.path.resolve()}")
+        logging.info(f"Writing {self.__class__.__name__} to {self.path.resolve()}")
         self._write()
 
     def exists(self) -> bool:
@@ -148,7 +148,7 @@ def outputs(*list_of_data: Data) -> Callable:
         def wrapper(*args: Any, **kwargs: Any) -> Any:
             outputs = function(*args, **kwargs)
             # create tuple if function returns only 1 element and not a tuple
-            if not isinstance(outputs, Iterable):
+            if not isinstance(outputs, tuple):
                 outputs = (outputs,)
             for data, output in zip(list_of_data, outputs):
                 data._data = output
