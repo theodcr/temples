@@ -4,13 +4,14 @@ from typing import Tuple
 import pandas as pd
 from sklearn.datasets import make_regression
 
-from temples import log, outputs, settings
+from temples import benchmark, log, outputs, settings
 
 from .data import raw_features, raw_targets
 
 
 @outputs(raw_features, raw_targets)
 @log("Creating fake regression data")
+@benchmark
 def create_regression(
     n_samples=settings["make_regression"]["n_samples"]
 ) -> Tuple[pd.DataFrame, pd.Series]:
