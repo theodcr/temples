@@ -9,6 +9,7 @@ from temples import output, settings
 from .data import raw_features, raw_targets
 
 
+@output(raw_features, raw_targets)
 def create_regression(
     n_samples=settings["make_regression"]["n_samples"]
 ) -> Tuple[pd.DataFrame, pd.Series]:
@@ -16,8 +17,3 @@ def create_regression(
     features = pd.DataFrame(X, columns=list(string.ascii_lowercase[: X.shape[1]]))
     targets = pd.Series(y, name="target")
     return features, targets
-
-
-@output(raw_features, raw_targets)
-def main() -> Tuple[pd.DataFrame, pd.Series]:
-    return create_regression()
