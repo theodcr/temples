@@ -1,4 +1,5 @@
 import logging
+import pickle
 from abc import ABC, abstractmethod
 from functools import wraps
 from pathlib import Path
@@ -15,7 +16,7 @@ class Data(ABC):
     This is an abstract base class, this class should be used to define Data classes
     specific to the application.
     Methods `load` and `write` must be overridden, it is also advised to override
-    the `__init__` method. See Usage section for an example.
+    the `__init__` method. See PickleData class for an example.
 
     Parameters
     ----------
@@ -31,20 +32,10 @@ class Data(ABC):
     _data : Any
         actual loaded data
 
-    Usage
-    -----
-    >>> class RawCSVData(Data):
-    >>>     def __init__(self):
-    >>>         super().__init__(path="../examples.csv", relative_to_config=True)
-    >>>
-    >>>     def load(self):
-    >>>         super().load()
-    >>>         self._data = pd.read_csv(self.path)
-    >>>         return self._data
-    >>>
-    >>>     def write(self) -> None:
-    >>>         super().write()
-    >>>         self._data.to_csv(self.path)
+    Methods
+    -------
+    load : loads the data stored on disk at self.path to attribute self._data
+    write : writes content of attribute self._data to disk at self.path
     """
 
     def __init__(self, path: str, relative_to_config: bool = False) -> None:
@@ -65,6 +56,21 @@ class Data(ABC):
 
     def exists(self) -> bool:
         return self.path.exists()
+
+
+class PickleData(Data):
+    """Wrapper around data stored in pickle format on disk."""
+
+    def load(self) -> Any:
+        super().load()
+        with open(self.path, "rb") as f:
+            self._data = pickle.load(f)
+        return self._data
+
+    def write(self) -> None:
+        super().write()
+        with open(self.path, "wb") as f:
+            pickle.dump(self._data, f)
 
 
 def inputs(**dict_of_data: Data) -> Callable:
