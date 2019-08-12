@@ -15,7 +15,7 @@ class Data(ABC):
 
     This is an abstract base class, this class should be used to define Data classes
     specific to the application.
-    Methods `load` and `write` must be overridden, it is also advised to override
+    Methods `_load` and `_write` must be overridden, it is also advised to override
     the `__init__` method. See PickleData class for an example.
 
     Parameters
@@ -32,10 +32,6 @@ class Data(ABC):
     _data : Any
         actual loaded data
 
-    Methods
-    -------
-    load : loads the data stored on disk at self.path to attribute self._data
-    write : writes content of attribute self._data to disk at self.path
     """
 
     def __init__(self, path: str, relative_to_config: bool = False) -> None:
@@ -44,31 +40,59 @@ class Data(ABC):
         else:
             self.path = Path(path)
         self._data = None
+        self.schema = None
 
     @abstractmethod
-    def load(self) -> None:
-        logging.info(f"Loading {self.__class__.__name__} from {self.path.resolve()}")
+    def _load(self) -> Any:
+        """Method called by load method that actually loads data when called
+        and simply returns it.
+        """
+        pass
+
+    def load(self) -> True:
+        """Loads the data stored on disk at self.path to attribute self._data.
+
+        Does not reload data from disk if data is already loaded in instance.
+        """
+        if self._data is None:
+            logging.info(
+                f"Loading {self.__class__.__name__} from {self.path.resolve()}"
+            )
+            self._data = self._load()
+        else:
+            logging.info(f"Data {self.__class__.__name__} already loaded")
+        return self._data
 
     @abstractmethod
+    def _write(self) -> None:
+        """Method called by write method that actually writes data when called."""
+        pass
+
     def write(self) -> None:
+        """Writes content of attribute self._data to disk at self.path.
+
+        Creates directories if needed, erases existing data.
+        """
         self.path.parent.mkdir(parents=True, exist_ok=True)
         logging.info(f"Writing {self.__class__.__name__} at {self.path.resolve()}")
+        self._write()
 
     def exists(self) -> bool:
         return self.path.exists()
+
+    def check(self) -> None:
+        raise NotImplemented
 
 
 class PickleData(Data):
     """Wrapper around data stored in pickle format on disk."""
 
-    def load(self) -> Any:
-        super().load()
+    def _load(self) -> Any:
         with open(self.path, "rb") as f:
             self._data = pickle.load(f)
         return self._data
 
-    def write(self) -> None:
-        super().write()
+    def _write(self) -> None:
         with open(self.path, "wb") as f:
             pickle.dump(self._data, f)
 

@@ -10,13 +10,10 @@ class RawCSVData(Data):
     def __init__(self, name: str) -> None:
         super().__init__(path=env["raw_data"] + name + ".csv", relative_to_config=True)
 
-    def load(self) -> pd.DataFrame:
-        super().load()
-        self._data = pd.read_csv(self.path)
-        return self._data
+    def _load(self) -> pd.DataFrame:
+        return pd.read_csv(self.path)
 
-    def write(self) -> None:
-        super().write()
+    def _write(self) -> None:
         self._data.to_csv(self.path, header=True)
 
 
