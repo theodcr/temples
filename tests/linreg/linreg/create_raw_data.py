@@ -1,20 +1,19 @@
 import string
-from typing import Tuple
 
 import pandas as pd
 from sklearn.datasets import make_regression
 
 from temples import benchmark, log, outputs, settings
 
-from .data import raw_features, raw_targets
+from .data import raw_data
 
 
-@outputs(raw_features, raw_targets)
+@outputs(raw_data)
 @log("Creating fake regression data")
 @benchmark
 def create_regression(
     n_samples=settings["make_regression"]["n_samples"]
-) -> Tuple[pd.DataFrame, pd.Series]:
+) -> pd.DataFrame:
     """Creates a fake regression dataset with 20 features
 
     Parameters
@@ -24,13 +23,14 @@ def create_regression(
 
     Returns
     -------
-    - pd.DataFrame of features, feature names are lowercase letters
-    - pd.Series of targets, name is "target"
+    pd.DataFrame of features and targets:
+        feature names are lowercase letters, targets are in the column "target"
     """
     X, y = make_regression(n_samples=n_samples, n_features=20, n_informative=5)
     features = pd.DataFrame(X, columns=list(string.ascii_lowercase[: X.shape[1]]))
     targets = pd.Series(y, name="target")
-    return features, targets
+    data = features.join(targets)
+    return data
 
 
 if __name__ == "__main__":

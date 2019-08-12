@@ -3,10 +3,10 @@ from sklearn.linear_model import Ridge
 
 from temples import benchmark, inputs, log, outputs, settings
 
-from .data import raw_features, raw_targets, trained_model
+from .data import clean_features, clean_targets, trained_model
 
 
-@inputs(features=raw_features, targets=raw_targets)
+@inputs(features=clean_features, targets=clean_targets)
 @outputs(trained_model)
 @log("Training linear regression model")
 @benchmark

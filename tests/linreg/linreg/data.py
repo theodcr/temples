@@ -3,12 +3,11 @@ import pandas as pd
 from temples import Data, PickleData, env
 
 
-class RawCSVData(Data):
-    """Base class to define raw data contained in CSV files in the "raw_data" directory.
-    """
+class CSVData(Data):
+    """Generic class to define data contained in CSV files."""
 
-    def __init__(self, name: str) -> None:
-        super().__init__(path=env["raw_data"] + name + ".csv", relative_to_config=True)
+    def __init__(self, path: str) -> None:
+        super().__init__(path=path, relative_to_config=True)
 
     def _load(self) -> pd.DataFrame:
         return pd.read_csv(self.path)
@@ -22,6 +21,7 @@ class TrainedModel(PickleData):
         super().__init__(path=env["trained_model"], relative_to_config=True)
 
 
-raw_features = RawCSVData("features")
-raw_targets = RawCSVData("targets")
+raw_data = CSVData(env["raw_data"])
+clean_features = CSVData(env["features"])
+clean_targets = CSVData(env["targets"])
 trained_model = TrainedModel()
