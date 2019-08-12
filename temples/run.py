@@ -25,7 +25,11 @@ def log(message: str) -> Callable:
 
 
 def benchmark(function: Callable) -> Callable:
-    """Decorator that logs the function execution time after function call."""
+    """Decorator that logs the function execution time after function call.
+
+    When chaining decorators, the benchmark decorator should be placed last
+    so that only the undecorated code is benchmarked.
+    """
 
     @wraps(function)
     def wrapper(*args: Any, **kwargs: Any) -> Any:
