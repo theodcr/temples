@@ -1,7 +1,8 @@
 import logging
 from abc import ABC, abstractmethod
+from functools import update_wrapper
 from pathlib import Path
-from typing import List
+from typing import Dict, List
 
 from .config import get_absolute_path
 
@@ -66,7 +67,34 @@ class Data(ABC):
         return self.path.exists()
 
 
-def output(*list_of_data: List[Data]):
+def inputs(**dict_of_data: Dict[str, Data]):
+    """
+    Returns a decorator that maps the inputs of the decorated function
+    to Data objects. Before decorated function call, the inputs are loaded from disk
+    using their load method.
+
+    Parameters
+    ----------
+    **dict_of_data : Dict[str, Data]
+        dict of Data instances mapped to inputs of the decorated function
+
+    Returns
+    -------
+    Decorator that maps the inputs of a function to the Data instances and
+    loads them from disk before function call.
+    """
+
+    def decorator(function):
+        def wrapper(*args, **kwargs):
+            inputs = {keyword: data.load() for keyword, data in dict_of_data.items()}
+            function(*args, **inputs, **kwargs)
+
+        return update_wrapper(wrapper, function)
+
+    return decorator
+
+
+def outputs(*list_of_data: List[Data]):
     """
     Returns a decorator that maps the outputs of the decorated function
     to Data objects. After decorated function call, the outputs are written to disk
@@ -83,6 +111,7 @@ def output(*list_of_data: List[Data]):
     Decorator that maps the outputs of a function to the Data instances and
     writes them to disk after function call.
     """
+
     def decorator(function):
         def wrapper(*args, **kwargs):
             outputs = function(*args, **kwargs)
@@ -90,6 +119,6 @@ def output(*list_of_data: List[Data]):
                 data._data = output
                 data.write()
 
-        return wrapper
+        return update_wrapper(wrapper, function)
 
     return decorator
