@@ -1,6 +1,6 @@
 from .config import env, settings
 from .data import Data, PickleData, inputs, outputs
-from .run import benchmark, log
+from .run import benchmark, log, main_runner
 
 __all__ = [
     "env",
@@ -11,4 +11,5 @@ __all__ = [
     "outputs",
     "benchmark",
     "log",
+    "main_runner",
 ]

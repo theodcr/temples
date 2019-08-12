@@ -37,3 +37,20 @@ def benchmark(function: Callable) -> Callable:
         return outputs
 
     return wrapper
+
+
+def main_runner(*functions) -> Callable:
+    """Returns a main function that calls given functions in order
+
+    Progression is logged.
+    """
+
+    def wrapper() -> None:
+        n_steps = len(functions)
+        t = time.perf_counter()
+        for i, function in enumerate(functions):
+            logging.info(f"Step #{i+1}/{n_steps}")
+            function()
+        logging.info(f"Global execution took {time.perf_counter() - t:.3f} s")
+
+    return wrapper
