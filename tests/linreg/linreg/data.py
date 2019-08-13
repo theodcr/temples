@@ -1,6 +1,9 @@
+import string
+
+import numpy as np
 import pandas as pd
 
-from temples import Data, PickleData, env
+from temples import Data, PandasDataFrame, PickleData, env
 
 
 class CSVData(Data):
@@ -16,12 +19,20 @@ class CSVData(Data):
         self._data.to_csv(self.path, header=True)
 
 
+class Features(CSVData, PandasDataFrame):
+    """Specific class for features dataframe, containing its schema."""
+
+    def __init__(self, path: str):
+        super().__init__(path=path)
+        self.schema = {key: np.dtype("float") for key in string.ascii_lowercase[:20]}
+
+
 class TrainedModel(PickleData):
     def __init__(self) -> None:
         super().__init__(path=env["trained_model"], relative_to_config=True)
 
 
 raw_data = CSVData(env["raw_data"])
-clean_features = CSVData(env["features"])
+clean_features = Features(env["features"])
 clean_targets = CSVData(env["targets"])
 trained_model = TrainedModel()

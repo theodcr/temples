@@ -59,6 +59,8 @@ class Data(ABC):
                 f"Loading {self.__class__.__name__} from {self.path.resolve()}"
             )
             self._data = self._load()
+            if self.schema is not None:
+                self.check()
         else:
             logging.info(f"Data {self.__class__.__name__} already loaded")
         return self._data
@@ -75,13 +77,20 @@ class Data(ABC):
         """
         self.path.parent.mkdir(parents=True, exist_ok=True)
         logging.info(f"Writing {self.__class__.__name__} to {self.path.resolve()}")
+        if self.schema is not None:
+            self.check()
         self._write()
 
     def exists(self) -> bool:
         return self.path.exists()
 
     def check(self) -> None:
-        raise NotImplemented
+        logging.info(f"Checking {self.__class__.__name__} schema")
+        self._check()
+
+    def _check(self) -> None:
+        """Method called by check method that actually checks data schema."""
+        pass
 
 
 class PickleData(Data):
@@ -95,6 +104,13 @@ class PickleData(Data):
     def _write(self) -> None:
         with open(self.path, "wb") as f:
             pickle.dump(self._data, f)
+
+
+class PandasDataFrame(Data):
+    """Abstract base class, wrapper around a Pandas DataFrame."""
+
+    def _check(self) -> None:
+        assert dict(self._data.dtypes) == self.schema
 
 
 def inputs(**dict_of_data: Data) -> Callable:
