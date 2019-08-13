@@ -9,9 +9,6 @@ from temples import Data, PandasDataFrame, PickleData, env
 class CSVData(Data):
     """Generic class to define data contained in CSV files."""
 
-    def __init__(self, path: str) -> None:
-        super().__init__(path=path, relative_to_config=True)
-
     def _load(self) -> pd.DataFrame:
         return pd.read_csv(self.path)
 
@@ -22,8 +19,8 @@ class CSVData(Data):
 class Features(CSVData, PandasDataFrame):
     """Specific class for features dataframe, containing its schema."""
 
-    def __init__(self, path: str):
-        super().__init__(path=path)
+    def __init__(self):
+        super().__init__(path=env["features"], relative_to_config=True)
         self.schema = {key: np.dtype("float") for key in string.ascii_lowercase[:20]}
 
 
@@ -32,7 +29,7 @@ class TrainedModel(PickleData):
         super().__init__(path=env["trained_model"], relative_to_config=True)
 
 
-raw_data = CSVData(env["raw_data"])
-clean_features = Features(env["features"])
-clean_targets = CSVData(env["targets"])
+raw_data = CSVData(env["raw_data"], relative_to_config=True)
+clean_features = Features()
+clean_targets = CSVData(env["targets"], relative_to_config=True)
 trained_model = TrainedModel()

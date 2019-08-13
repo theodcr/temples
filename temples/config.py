@@ -4,6 +4,10 @@ from typing import Any, Dict
 
 import toml
 
+if "TEMPLES_CONFIG" not in os.environ:
+    raise KeyError(
+        "You must set the environment variable TEMPLES_CONFIG to use this package"
+    )
 _base_temples_path = Path(os.environ["TEMPLES_CONFIG"])
 
 

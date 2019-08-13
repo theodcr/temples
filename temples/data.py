@@ -16,7 +16,8 @@ class Data(ABC):
     This is an abstract base class, this class should be used to define Data classes
     specific to the application.
     Methods `_load` and `_write` must be overridden, it is also advised to override
-    the `__init__` method. See PickleData class for an example.
+    the `__init__` and `_check` methods.
+    See PickleData class for an example.
 
     Parameters
     ----------
