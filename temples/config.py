@@ -62,7 +62,7 @@ class Configuration(object):
     def __call__(self) -> Dict:
         return self._dict
 
-    def __getitem__(self, key) -> Any:
+    def __getitem__(self, key: str) -> Any:
         return self._dict[key]
 
     def __repr__(self) -> str:

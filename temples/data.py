@@ -111,7 +111,8 @@ class PandasDataFrame(Data):
     """Abstract base class, wrapper around a Pandas DataFrame."""
 
     def _check(self) -> None:
-        assert dict(self._data.dtypes) == self.schema
+        if self._data is not None:
+            assert dict(self._data.dtypes) == self.schema
 
 
 def inputs(**dict_of_data: Data) -> Callable:

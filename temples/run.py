@@ -43,7 +43,7 @@ def benchmark(function: Callable) -> Callable:
     return wrapper
 
 
-def main_runner(*functions) -> Callable:
+def main_runner(*functions: Callable) -> Callable:
     """Returns a main function that calls given functions in order
 
     Progression is logged.
