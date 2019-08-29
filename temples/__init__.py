@@ -1,10 +1,9 @@
-from .config import env, settings
+from .config import Configuration
 from .data import Data, PandasDataFrame, PickleData, inputs, outputs
 from .run import benchmark, log, main_runner
 
 __all__ = [
-    "env",
-    "settings",
+    "Configuration",
     "Data",
     "PandasDataFrame",
     "PickleData",

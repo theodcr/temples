@@ -67,8 +67,3 @@ class Configuration(object):
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__} instance loaded from file {self._path}"
-
-
-# define global configurations
-env = Configuration("env")
-settings = Configuration("settings")

@@ -3,7 +3,9 @@ import string
 import numpy as np
 import pandas as pd
 
-from temples import Data, PandasDataFrame, PickleData, env
+from temples import Data, PandasDataFrame, PickleData
+
+from .config import env
 
 
 class CSVData(Data):

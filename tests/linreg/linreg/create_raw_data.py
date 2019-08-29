@@ -3,8 +3,9 @@ import string
 import pandas as pd
 from sklearn.datasets import make_regression
 
-from temples import benchmark, log, outputs, settings
+from temples import benchmark, log, outputs
 
+from .config import settings
 from .data import raw_data
 
 

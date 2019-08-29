@@ -1,8 +1,9 @@
 import pandas as pd
 from sklearn.linear_model import Ridge
 
-from temples import benchmark, inputs, log, outputs, settings
+from temples import benchmark, inputs, log, outputs
 
+from .config import settings
 from .data import clean_features, clean_targets, trained_model
 
 
