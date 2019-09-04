@@ -52,8 +52,8 @@ def main_runner(*functions: Callable) -> Callable:
     def wrapper() -> None:
         n_steps = len(functions)
         t = time.perf_counter()
-        for i, function in enumerate(functions):
-            logging.info(f"Step #{i+1}/{n_steps}")
+        for i, function in enumerate(functions, 1):
+            logging.info(f"Step #{i}/{n_steps}")
             function()
         logging.info(f"Global execution took {time.perf_counter() - t:.3f} s")
 
